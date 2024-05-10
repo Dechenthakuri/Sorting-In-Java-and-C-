@@ -1,0 +1,108 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+public
+class ThakuriD_Project2_Main {
+ public
+  static class Sort {
+    int count;
+    String[] dataAry;
+   public
+    int countData(BufferedReader inFile,
+                  BufferedWriter deBugFile) throws Exception {
+      deBugFile.write("Entering countData()\n");
+      count = 0;
+      String data;
+      while ((data = inFile.readLine()) != null) {
+        String[] words = data.trim().split("\\s+");
+        count += words.length;
+      }
+      deBugFile.write("leaving countData count = " + count + "\n");
+      return count;
+    }
+   public
+    void loadData(BufferedReader inFile, String[] dataAry, int count,
+                  BufferedWriter deBugFile) throws IOException {
+      deBugFile.write("Entering loadData ()\n");
+      int index = 0;
+      String data;
+      while ((data = inFile.readLine()) != null && index < count) {
+        String[] words = data.trim().split("\\s+");
+        for (String word : words) {
+          if (index < count) {
+            dataAry[index] = word;
+            index++;
+          }
+        }
+      }
+      deBugFile.write("leaving loadData()\n");
+    }
+   public
+    void bubbleSort(String[] dataAry, int count,
+                    BufferedWriter deBugFile) throws Exception {
+      “Hard copy” Page 2
+
+          deBugFile.write("Entering bubbleSort ()\n");
+      String tmp;
+      int last = count - 1;
+      boolean swapFlag;
+      do {
+        int i = 0;
+        swapFlag = false;
+        while (i < last) {
+          if (dataAry[i].compareTo(dataAry[i + 1]) > 0) {
+            tmp = dataAry[i];
+            dataAry[i] = dataAry[i + 1];
+            dataAry[i + 1] = tmp;
+            swapFlag = true;
+          }
+          i++;
+        }
+deBugFile.write("** In bubbleSort after one iteration. i = " + i + "; last = " + last + ";
+swapFlag = " + swapFlag + "\n");
+deBugFile.write("** Printing dataAry**");
+printDataAry(dataAry, count, deBugFile, deBugFile);
+last--;
+      } while (swapFlag && last > 0);
+      deBugFile.write("leaving bubbleSort ()\n");
+    }
+
+   public
+    void printDataAry(String[] dataAry, int count, BufferedWriter fileOut,
+                      BufferedWriter deBugFile) throws Exception {
+      deBugFile.write("Entering printDataAry()\n");
+      int index = 0;
+      while (index < count) {
+        fileOut.write(dataAry[index] + "\n");
+        index++;
+      }
+      deBugFile.write("leaving printDataAry()\n");
+      deBugFile.write("\n");
+    }
+
+  } public static void main(String[] args) throws Exception {
+    ThakuriD_Project2_Main.Sort sorter = new ThakuriD_Project2_Main.Sort();
+    BufferedReader inFile = new BufferedReader(new FileReader(args[0]));
+    BufferedWriter outFile = new BufferedWriter(new FileWriter(args[1]));
+    BufferedWriter deBugFile = new BufferedWriter(new FileWriter(args[2]));
+    int count = sorter.countData(inFile, deBugFile);
+    deBugFile.write("In main() count = " + count + "\n");
+
+    String[] dataAry = new String[count];
+    inFile.close();
+    inFile = new BufferedReader(new FileReader(args[0]));
+    sorter.loadData(inFile, dataAry, count, deBugFile);
+    outFile.write("**Printing dataAry before sorting**\n");
+    sorter.printDataAry(dataAry, count, outFile, deBugFile);
+    sorter.bubbleSort(dataAry, count, deBugFile);
+    outFile.write("\n");
+    outFile.write("**Printing dataAry after sorting**\n");
+    sorter.printDataAry(dataAry, count, outFile, deBugFile);
+
+    inFile.close();
+    outFile.close();
+    deBugFile.close();
+  }
+}
